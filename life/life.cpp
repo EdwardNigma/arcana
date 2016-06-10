@@ -10,66 +10,34 @@ int main()
 
 	int count_of_generations(1000);
 
-	bool cell[width*heigh] = { false }; // массив
-	bool secondcell[width*heigh] = { false };
+	bool cell[width][heigh] = { false }; // массив
+	bool secondcell[width][heigh] = { false }; 
 
 	srand((unsigned)time(NULL));
-
+	
+	// создаем рандомный массив, заполняем его нулями и единицами
+	
 	for (int y = 0; y < heigh; y++)
-	{
 		for (int x = 0; x < width; x++)
-		{
-			if (cell[x + y * width])
-			{
-				cout << livecell;
-			}
-			else
-			{
-				cout << deadcell;
-			}
-		}
-		cout << '\n';
-	}
-
-	cout << '\n';
-
-	// создаем рандомный массив
-
-	for (int y = 0; y < heigh; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			cell[x + y * width] = rand() % 2;
-			if (cell[x + y * width])
-			{
-				cout << livecell;
-			}
-			else
-			{
-				cout << deadcell;
-			}
-		}
-		cout << '\n';
-	}
-	cout << '\n';
-	cout << '\n';
-
+			cell[x][y] = rand() % 2;
+			
 	// вывод поколений
-	for (int g = 0; g < count_of_generations; g++)
+	
+	for (int g = 0; g < count_of_generations; g++) // выводим последующие поколения, пока g меньше count_of_generation
 	{
 		for (int y = 0; y < heigh; y++)
 		{
 			for (int x = 0; x < width; x++)
 			{
 				// анализ соседних клеток
-				static int count(0);
+				int count = 0;
 				// 0..
 				// ...
 				// ...
 
-				if (((x - 1) >= 0) && ((y - 1) >= 0))
+				if (((x - 1) >= 0) && ((y - 1) >= 0)) // проверяем соседнюю клетку, чтобы она принадлежала массиву 
 				{
-					if (cell[(x - 1) + (y - 1) * width]) count++;
+					if (cell[x - 1][y - 1]) count++; // если клетка живая, то увеличиваем их кол-во
 				}
 
 				// .0.
@@ -78,7 +46,7 @@ int main()
 
 				if ((y - 1) >= 0)
 				{
-					if (cell[x + (y - 1) * width]) count++;
+					if (cell[x][y - 1]) count++;
 				}
 
 				// ..0
@@ -87,7 +55,7 @@ int main()
 
 				if ((x <= (width - 1)) && ((y - 1) >= 0))
 				{
-					if (cell[(x + 1) + (y - 1) * width]) count++;
+					if (cell[x + 1][y - 1]) count++;
 				}
 
 				// ...
@@ -95,7 +63,7 @@ int main()
 				// ...
 				if ((x - 1) >= 0)
 				{
-					if (cell[(x - 1) + y * width]) count++;
+					if (cell[x - 1][y]) count++;
 				}
 
 				// ...
@@ -103,7 +71,7 @@ int main()
 				// ...
 				if ((x + 1) <= (width - 1))
 				{
-					if (cell[(x + 1) + y * width]) count++;
+					if (cell[x + 1][y]) count++;
 				}
 
 				// ...
@@ -111,7 +79,7 @@ int main()
 				// 0..
 				if (((x - 1) >= 0) && (y + 1) <= (heigh - 1))
 				{
-					if (cell[x - 1 + (y + 1) * width]) count++;
+					if (cell[x - 1][y + 1]) count++;
 				}
 
 				// ...
@@ -119,7 +87,7 @@ int main()
 				// .0.
 				if ((y + 1) <= (heigh - 1))
 				{
-					if (cell[x + (y + 1) * width]) count++;
+					if (cell[x][y + 1]) count++;
 				}
 
 				// ...
@@ -127,41 +95,40 @@ int main()
 				// ..0
 				if (((x + 1) <= (width - 1)) && ((y + 1) <= (heigh - 1)))
 				{
-					if (cell[x + 1 + (y + 1) * width]) count++;
+					if (cell[x + 1][y + 1]) count++;
 				}
 
-				// определение состояния
+				// определение состояния текущей клетки
 
-				if ((count < 2) || (count > 3))
+				if ((count < 2) || (count > 3)) 
 				{
-					secondcell[x + y * width] = false;
+					secondcell[x][y] = false;
 					cout << deadcell;
 				}
 				else
 				{
-					if ((!cell[x + y * width]) && (count != 3))
+					if ((!cell[x][y] && (count != 3)))
 					{
-						secondcell[x + y * width] = false;
+						secondcell[x][y] = false;
 						cout << deadcell;
 					}
 					else
 					{
-						secondcell[x + y * width] = true;
+						secondcell[x][y] = true;
 						cout << livecell;
 					}
 				}
 
-				count = 0;
 			}
 
 			cout << '\n';
 		}
-		Sleep(1200);
+		Sleep(750);
 		system("cls");
-		for (int i = 0; i < (width * heigh); i++)
-		{
-			cell[i] = secondcell[i];
-		}
+		
+		for (int y = 0; y < heigh; y++)
+			for (int x = 0; x < width; x++)
+				cell[x][y] = secondcell[x][y];
 	}
 
 	return 0;
